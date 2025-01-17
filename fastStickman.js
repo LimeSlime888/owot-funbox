@@ -792,12 +792,13 @@ makeCharModal();
 menu.addOption("Select character", _=>w.ui.charModal.open());
 function makeStickPalModal() {
 	var modal = new Modal();
-	modal.setMinimumSize(512, 128);
+	modal.setMinimumSize(512);
 	modal.createForm();
 	modal.inputField.style.gridTemplateColumns = "";
 	modal.setFormTitle("Separate values with , and use hex code.");
 	let pal = document.createElement("input");
 	pal.type = "text";
+	pal.value = stickmanPalette.map(e=>e.toString(16)).join(',');
 	pal.style.width = "400px";
 	modal.inputField.appendChild(pal);
 	modal.onSubmit(function(){
