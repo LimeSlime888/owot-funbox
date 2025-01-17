@@ -1,4 +1,4 @@
-palette = [0x54e58b, 0xbcf1, 0x2a7346];
+palette = [0, 0xff, 0xff0000];
 latestPose = null;
 overChars = [];
 stickPos = [...convertTileToXY(...cursorCoords.swap(1,2))];
@@ -274,4 +274,25 @@ toggleStick = function(state=!stickmanUpdating, interval=100) {
     if(!state)return;
     stickInterval = setInterval(_=>theCool(), interval);
 }
-toggleStick(1)
+toggleStick(1);
+function makeStickPalModal() {
+	var modal = new Modal();
+	modal.setMinimumSize(512);
+	modal.createForm();
+	modal.inputField.style.gridTemplateColumns = "";
+	modal.setFormTitle("Separate values with , and use hex code.");
+	let pal = document.createElement("input");
+	pal.type = "text";
+	pal.value = palette.map(e=>e.toString(16)).join(',');
+	pal.style.width = "400px";
+	modal.inputField.appendChild(pal);
+	modal.onSubmit(function(){
+		palette = pal.value.split(",").map(e=>parseInt(e, 16))
+	})
+	modal.onOpen(function(){
+		pal.value = palette.map(e=>e.toString(16))
+	})
+	return w.ui.stickPalModal = modal;
+}
+makeStickPalModal();
+menu.addOption("Change palette", _=>w.ui.stickPalModal.open());
