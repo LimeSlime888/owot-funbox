@@ -616,9 +616,9 @@ drawStickman = function(pose, x, y){
 	}
 	sloc.splice(0);
 	pose.forEach(function(e){
-		queueCharToXY(e[0], stickmanPalette[e[1]], x+e[2], y+e[3], _, 2,
-			{bold: e[4]&8, italic: e[4]&4, under: e[4]&2, strike: e[4]&1});
 		let overwrittenChar = getCharInfoXY(x+e[2], y+e[3]);
+		queueCharToXY(e[0], stickmanPalette[e[1]], x+e[2], y+e[3], _, 2,
+			{bold: e[4]&8, italic: e[4]&4, under: e[4]&2, strike: e[4]&1}, overwrittenChar.bgColor);
 		sloc.push([
 			x+e[2], y+e[3], overwrittenChar.char,
 			overwrittenChar.color,
