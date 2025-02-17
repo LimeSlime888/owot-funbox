@@ -4,6 +4,11 @@ window.sleep ??= function(ms) {
 	});
 }
 
+if (w.sfx && w.sfx.volumeBar) {
+	w.sfx.volumeBar.parentElement.remove();
+	menu.entries.splice(menu.entries.findIndex(e=>e.content==w.sfx.volumeBar), 1);
+	menu.lastEntryId -= 1;
+}
 w.sfx = {
 	warp: new Audio("https://files.catbox.moe/9no0d7.wav"),
 	message: new Audio("https://files.catbox.moe/45qjxp.wav"),
@@ -168,3 +173,23 @@ api_chat_send = Function("message", "opts", api_chat_send.toString()
 w.off("chat", window.onMessageGot);
 onMessageGot = (e)=>{if(e.hide)return;w.sfx.message.currentTime=0;w.sfx.message.play()}
 w.on("chat", onMessageGot);
+w.sfx.volumeBar = document.createElement("input");
+w.sfx.volumeBar.oninput = function() {
+	for (let sound of Object.values(w.sfx).filter(e=>e instanceof Audio)) {
+		sound.volume = Math.min(1, this.value);
+	}
+	w.sfx.message.volume = Math.min(1, this.value/2);
+}
+w.sfx.volumeBar.ondblclick = function() {
+	w.sfx.volumeBar.value = 1;
+}
+w.sfx.volumeBar.title = "SFX volume";
+w.sfx.volumeBar.type = "range";
+w.sfx.volumeBar.value = 1;
+w.sfx.volumeBar.min = 0;
+w.sfx.volumeBar.max = 2;
+w.sfx.volumeBar.step = 1/128;
+w.sfx.volumeBar.style.accentColor = "mediumvioletred";
+w.sfx.volumeBar.id = "volumebar";
+menu.volumeBarId = menu.addEntry(w.sfx.volumeBar);
+menuOptions.sfxvolume = menu.volumeBarId;
