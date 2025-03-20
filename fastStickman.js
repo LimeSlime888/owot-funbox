@@ -594,7 +594,7 @@ poses.squarie = {
 };
 selectedChar = "default";
 drawStickman = function(pose, x, y){
-	let cc = convertTileToXY(...(cursorCoords??[]).swap(1, 2));
+	let cc = convertTileToXY(...(cursorCoords??[]));
 	x ??= cc[0]; y ??= cc[1];
 	x = Math.floor(x);
 	y = Math.floor(y);
@@ -660,7 +660,7 @@ makeStickModal = function () {
 	poseInput = modal.inputField.appendChild(document.createElement("input"));
 	modal.onSubmit(function() {
 		if (cursorCoords) {
-			drawStickman(poseInput.value, ...convertTileToXY(...cursorCoords.swap(1,2)));
+			drawStickman(poseInput.value, ...convertTileToXY(...cursorCoords));
 		}
 	});
 	modal.setFooterCheckbox("Clean up | ", a=>{cleanUpAfterStickman=a}, true);
@@ -765,7 +765,7 @@ makeStickCustomModal = function () {
 	})
 	modal.onSubmit(function() {
 		if (cursorCoords) {
-			drawStickman(poseData.limbs, ...convertTileToXY(...cursorCoords.swap(1,2)));
+			drawStickman(poseData.limbs, ...convertTileToXY(...cursorCoords));
 		}
 	});
 	poseData.selectedLimb = -1;
