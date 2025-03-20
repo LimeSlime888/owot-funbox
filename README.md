@@ -1,6 +1,7 @@
 # [Our World of Text](https://owot.me) funbox
 Scripts anyone is free to use (non-maliciously) for fun! :D  
-**\*Run utilities.js before running this**
+**\*Run owotutilities.js before running this**
+**°Run utilities.js before running this**
 ## fastStickman.js*
 This script is for quick stickman placement. If the desired pose is not in a preset, you can modify a preset to match it!  
 **Current characters:** default, hazmat, squarie (`shock` = hazmat)  
@@ -10,3 +11,6 @@ This script puts a gravity-like force on your cursor. It originated from [/owotc
 ## stickPlat.js*
 I made this script originally for exploring canvas like a platformer, but now it's been repurposed for OWoT Story Mode! Development version of this script will be kept private, though.
 You can change the stickman palette, like fastStickman.js.
+## sounds.js
+This script adds sound effects to OWoT such as when you \/warp, when a message is received, when you use a client command, and when you connect to a world using \/warp.
+You can adjust the volume of these sound effects in the Menu with the mediumvioletred slider.
