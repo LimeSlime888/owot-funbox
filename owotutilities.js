@@ -1,4 +1,5 @@
 w.broadcastReceive(1);
+w.setFlushInterval(1);
 convertTileToXY = (tileX,tileY,charX,charY)=>[tileX*tileC+charX, tileY*tileR+charY]
 convertXYtoTile = (x,y)=>{
 	return [Math.floor(x / tileC),
@@ -28,7 +29,7 @@ writeCharToXY = function (char, charColor, x, y, noUndo=true, bgColor=null,
 }
 writeTextToXY = function (text, color, x, y, noUndo=true) {
 	text = text+"";
-	textArray = [...text];
+	textArray = advancedSplit(text);
 	xpos=0;line=0;flag=0;
 	if(color=="line"){flag=text.split('\n').length;color=0xffffff-((8-flag)*0x201000);}
 	textArray.forEach(
@@ -46,7 +47,7 @@ writeTextToXY = function (text, color, x, y, noUndo=true) {
 }
 queueTextToXY = function (text, color, x, y, noUndo=true, priority=0, decoration=null, bgColor) {
 	text = text+"";
-	textArray = [...text];
+	textArray = advancedSplit(text);
 	xpos=0;line=0;flag=0;
 	if(color=="line"){flag=text.split('\n').length;color=0xffffff-((8-flag)*0x201000);}
 	textArray.forEach(
@@ -101,7 +102,6 @@ flushQueue = function (firstCheck = true, secondCheck = true, secondCheckLinks =
 	});
 	q_queue.splice(0);
 }
-w.setFlushInterval(1);
 abortCounts = {};
 pasteChars = function(value){
 	var parser = textcode_parser(value, {
