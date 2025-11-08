@@ -4,7 +4,8 @@ Scripts anyone is free to use (non-maliciously) for fun! :D
 **°Run utilities.js before running this**
 ## screenshot.js
 This script is for screenshotting canvas content.
-Use the menu to take a screenshot and put it into your clipboard.
+Use the menu or the keybind (CTRL+1) to take a screenshot and put it into your clipboard.
+The *date* option adds the date at the top left.
 The *world name* option adds the world name at the top left.
 The *coordinates* option adds the coordinates at the top left.
 The *tile size* option adds the tile size at the bottom left.
