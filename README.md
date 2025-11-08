@@ -14,3 +14,20 @@ You can change the stickman palette, like fastStickman.js.
 ## sounds.js
 This script adds sound effects to OWoT such as when you \/warp, when a message is received, when you use a client command, and when you connect to a world using \/warp.
 You can adjust the volume of these sound effects in the Menu with the mediumvioletred slider.
+## writebefore_chatbar.js°
+This script lets you type from a pool of random characters / add colour modifications to the characters you type, signaled by including tokens in the chatbar. Helped in making [/lime.owot/city](https://owot.me/lime.owot/city) and [/mis◌◌◌◌◌◌.](https://github.com/LimeSlime888/mis------.).
+### Syntax
+#### Character pools
+\[hd\], \[md\], \[ld\] - high, medium, and low density characters respectively.  
+(s), (ul), (ll), (n) - include symbols, uppercase letters, lowercase letters, and numbers respectively.  
+&(number) - add spaces to the pool.
+#### Character modifications
+\[ov\] - overline.
+#### Colour modifications
+\[B\] - exclude background colour from modification.  
+\[C\] - exclude foreground colour from modification.  
+\[swap\] - swap foreground and background colours.  
+m(hexadecimal) - mix colour.  
+M(float) - mix opacity, default 0.5.  
+@(float) - brightness.  
+±(float) - random brightness deviation.
