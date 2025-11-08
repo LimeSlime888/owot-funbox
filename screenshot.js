@@ -1,6 +1,6 @@
 /*
 	by lime.owot
-	version 3
+	version 4
 	for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
 */
 
@@ -11,8 +11,9 @@ var ss_date = true;
 
 var ss_padding = 16;
 var ss_fontSize = 32;
+keyConfig.screenshot = 'CTRL+1';
 
-menu.addOption('Take canvas screenshot', function(){
+function ss_copyScreenshot() {
 	w.redraw();
 	var text = false;
 	if (ss_coords || ss_world || ss_tile || ss_date) {
@@ -55,7 +56,16 @@ menu.addOption('Take canvas screenshot', function(){
 		})]);
 	});
 	alert('Copied image.');
-});
+}
+
+document.removeEventListener('keydown', window.ss_onKeyDown);
+function ss_onKeyDown(e) {
+	if (!checkKeyPress(e, keyConfig.screenshot)) { return false }
+	ss_copyScreenshot();
+}
+document.addEventListener('keydown', ss_onKeyDown);
+
+menu.addOption('Take canvas screenshot', ()=>ss_copyScreenshot());
 menu.addCheckboxOption('Screenshot: coordinates', ()=>ss_coords=true, ()=>ss_coords=false, ss_coords);
 menu.addCheckboxOption('Screenshot: world name', ()=>ss_world=true, ()=>ss_world=false, ss_world);
 menu.addCheckboxOption('Screenshot: tile size', ()=>ss_tile=true, ()=>ss_tile=false, ss_tile);
