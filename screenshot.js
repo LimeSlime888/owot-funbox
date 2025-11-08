@@ -1,6 +1,6 @@
 /*
 	by lime.owot
-	version 1
+	version 2
 	for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
 */
 
@@ -26,8 +26,9 @@ menu.addOption('Take canvas screenshot', function(){
 		if (ss_coords) {
 			var tileCoordX = -positionX / tileW;
 			var tileCoordY = -positionY / tileH;
-			var centerY = -Math.floor(tileCoordY / coordSizeY);
-			var centerX = Math.floor(tileCoordX / coordSizeX);
+			var centerY = -Math.floor(tileCoordY) / coordSizeY;
+			var centerX = Math.floor(tileCoordX) / coordSizeX;
+			[centerY, centerX] = [centerY, centerX].map(e=>Math.floor(e*100)/100);
 			toText.push(`${centerX}, ${centerY}`);
 		}
 		let y = ss_fontSize*(3/4) + ss_padding;
