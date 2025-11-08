@@ -17,6 +17,23 @@ w.sfx = {
 }
 w.sfx.message.volume = 1/2;
 
+function manageCoordHashGeneral(hash) {
+	if(!Permissions.can_go_to_coord(state.userModel, state.worldModel)) return;
+	try {
+		var coord = hash.match(/#x:-?\d+,y:-?\d+$/);
+		if(coord) {
+			coord = hash.split(/#x:|,y:/).slice(1).map(function(a) {
+				return parseInt(a);
+			});
+			homeX = coord[0];
+			homeY = coord[1];
+			w.doGoToCoord(coord[1], coord[0]);
+		}
+	} catch(e) {
+		console.warn(e);
+	}
+}
+
 linkElm.onclick = function(e) {
 	if (linkParams.coord) {
 		coord_link_click(e);
@@ -46,7 +63,9 @@ linkElm.onclick = function(e) {
 		return false;
 	}
 	if (["ourworldoftext.com", "owot.me"].includes(linkParams.host) && !e.ctrlKey) {
-		client_commands.warp([linkElm.href.replace(RegExp("https?://" + linkParams.host + "/"), "")]);
+		let urlObj = new URL(linkElm.href);
+		client_commands.warp([urlObj.pathname]);
+		manageCoordHashGeneral(urlObj.hash);
 		return false;
 	}
 	if (secureLink && !e.ctrlKey) {
@@ -63,7 +82,7 @@ linkElm.onclick = function(e) {
 }
 async function showTitle(text='undefined') {
 	let title = document.createElement("span");
-	title.style = `font-family: monospace;
+	title.style = `font-family: ${fontTemplate.slice(3)};
 color: #fff;text-align: center;font-size: 4vh;
 padding: 16px;border-radius:16px;background: #0007;
 position: absolute;top:10%;left:0;
@@ -90,10 +109,7 @@ filter: blur(32px)`
 w.off('socketConnect', window.onWarpConnect);
 async function onWarpConnect() {
 	await sleep(1500);
-	let path = new URL(w.socket.socket.url).pathname;
-	if (path.length > 4) path = path.slice(0, -4);
-	else path = '/';
-	showTitle(path);
+	showTitle(state.worldModel.pathname ? state.worldModel.pathname : '/');
 	w.sfx.newworld.currentTime = 0;
 	w.sfx.newworld.play();
 }
@@ -123,13 +139,18 @@ client_commands.warp = function (args) {
 	resetUI();
 	stopPasting();
 	if(address.charAt(0) == "/") address = address.substr(1);
+	manageCoordHashGeneral(address);
+	let trimHash = address.indexOf('#');
+	if (trimHash == -1) trimHash = Infinity;
+	let trimSearch = address.indexOf('?');
+	if (trimSearch == -1) trimSearch = Infinity;
+	address = address.substr(0, Math.min(trimHash, trimSearch));
 	state.worldModel.pathname = address ? "/" + address : "";
 	ws_path = createWsPath();
 	w.changeSocket(ws_path, true);
 	getWorldProps(address, "props", function(props, error) {
-		if(!error) {
-			reapplyProperties(props);			}
-		});
+		if(!error) { reapplyProperties(props) }
+	});
 	clientChatResponse("Warping to world: \"" + address + "\"");
 	w.sfx.warp.currentTime = 0;
 	w.sfx.warp.play();
@@ -170,9 +191,9 @@ api_chat_send = Function("message", "opts", api_chat_send.toString()
 	.match(new RegExp('(?<=\{)[^]{0,}(?=\})'))[0]
 	.replace('(args);\n\t\t\tr',
 		'(args);if(command!="warp"){w.sfx.clientcommand.currentTime=0;w.sfx.clientcommand.play()}\n\t\t\tr'));
-w.off("chat", window.onMessageGot);
-onMessageGot = (e)=>{if(e.hide)return;w.sfx.message.currentTime=0;w.sfx.message.play()}
-w.on("chat", onMessageGot);
+w.off("chatmod", window.onMessageGot);
+onMessageGot = (e)=>{if(e.hide&&!e.network)return;w.sfx.message.currentTime=0;w.sfx.message.play()}
+w.on("chatmod", onMessageGot);
 w.sfx.volumeBar = document.createElement("input");
 w.sfx.volumeBar.oninput = function() {
 	for (let sound of Object.values(w.sfx).filter(e=>e instanceof Audio)) {
@@ -189,6 +210,7 @@ w.sfx.volumeBar.value = 1;
 w.sfx.volumeBar.min = 0;
 w.sfx.volumeBar.max = 2;
 w.sfx.volumeBar.step = 1/128;
+w.sfx.volumeBar.style.width = "100%";
 w.sfx.volumeBar.style.accentColor = "mediumvioletred";
 w.sfx.volumeBar.id = "volumebar";
 menu.volumeBarId = menu.addEntry(w.sfx.volumeBar);
