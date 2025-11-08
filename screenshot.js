@@ -1,33 +1,46 @@
 /*
-   by lime.owot
-   version 0
-   for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
+	by lime.owot
+	version 1
+	for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
 */
 
 var ss_coords = false;
 var ss_world = false;
+var ss_tile = false;
 var ss_padding = 16;
 var ss_fontSize = 32;
 
 menu.addOption('Take canvas screenshot', function(){
-	if (ss_coords || ss_world) {
-		var tileCoordX = -positionX / tileW;
-		var tileCoordY = -positionY / tileH;
-		var centerY = -Math.floor(tileCoordY / coordSizeY);
-		var centerX = Math.floor(tileCoordX / coordSizeX);
-		let font = owotCtx.font;
-		let textAlign = owotCtx.textAlign;
+	var text = false;
+	if (ss_coords || ss_world || ss_tile) {
+		var font = owotCtx.font;
+		var textAlign = owotCtx.textAlign;
 		owotCtx.font = `${ss_fontSize}px monospace`;
 		owotCtx.textAlign = 'left';
 		owotCtx.fillStyle = styles.text;
+		text = true;
+	}
+	if (ss_coords || ss_world) {
 		let toText = [];
 		if (ss_world) toText.push(state.worldModel.pathname ? state.worldModel.pathname : '/');
-		if (ss_coords) toText.push(`${centerX}, ${centerY}`);
+		if (ss_coords) {
+			var tileCoordX = -positionX / tileW;
+			var tileCoordY = -positionY / tileH;
+			var centerY = -Math.floor(tileCoordY / coordSizeY);
+			var centerX = Math.floor(tileCoordX / coordSizeX);
+			toText.push(`${centerX}, ${centerY}`);
+		}
 		let y = ss_fontSize*(3/4) + ss_padding;
 		for (let line of toText) {
 			owotCtx.fillText(line, ss_padding, y);
 			y += ss_fontSize;
 		}
+	}
+	if (ss_tile) {
+		owotCtx.fillText(`tile = ${tileW.toFixed(2)}, ${tileH.toFixed(2)}`,
+			ss_padding, owotHeight - ss_fontSize*(3/8) - ss_padding);
+	}
+	if (text) {
 		owotCtx.font = font;
 		owotCtx.textAlign = textAlign;
 	}
@@ -40,3 +53,4 @@ menu.addOption('Take canvas screenshot', function(){
 });
 menu.addCheckboxOption('Screenshot: coordinates', ()=>ss_coords=true, ()=>ss_coords=false, false);
 menu.addCheckboxOption('Screenshot: world name', ()=>ss_world=true, ()=>ss_world=false, false);
+menu.addCheckboxOption('Screenshot: tile size', ()=>ss_tile=true, ()=>ss_tile=false, true);
