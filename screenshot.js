@@ -1,18 +1,21 @@
 /*
 	by lime.owot
-	version 2
+	version 3
 	for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
 */
 
 var ss_coords = false;
-var ss_world = false;
+var ss_world = true;
 var ss_tile = false;
+var ss_date = true;
+
 var ss_padding = 16;
 var ss_fontSize = 32;
 
 menu.addOption('Take canvas screenshot', function(){
+	w.redraw();
 	var text = false;
-	if (ss_coords || ss_world || ss_tile) {
+	if (ss_coords || ss_world || ss_tile || ss_date) {
 		var font = owotCtx.font;
 		var textAlign = owotCtx.textAlign;
 		owotCtx.font = `${ss_fontSize}px monospace`;
@@ -20,8 +23,9 @@ menu.addOption('Take canvas screenshot', function(){
 		owotCtx.fillStyle = styles.text;
 		text = true;
 	}
-	if (ss_coords || ss_world) {
+	if (ss_coords || ss_world || ss_date) {
 		let toText = [];
+		if (ss_date) toText.push(new Date().toISOString());
 		if (ss_world) toText.push(state.worldModel.pathname ? state.worldModel.pathname : '/');
 		if (ss_coords) {
 			var tileCoordX = -positionX / tileW;
@@ -34,12 +38,12 @@ menu.addOption('Take canvas screenshot', function(){
 		let y = ss_fontSize*(3/4) + ss_padding;
 		for (let line of toText) {
 			owotCtx.fillText(line, ss_padding, y);
-			y += ss_fontSize;
+			y += ss_fontSize*(13/12);
 		}
 	}
 	if (ss_tile) {
 		owotCtx.fillText(`tile = ${tileW.toFixed(2)}, ${tileH.toFixed(2)}`,
-			ss_padding, owotHeight - ss_fontSize*(3/8) - ss_padding);
+			ss_padding, owotHeight - ss_fontSize*(1/8) - ss_padding);
 	}
 	if (text) {
 		owotCtx.font = font;
@@ -52,6 +56,7 @@ menu.addOption('Take canvas screenshot', function(){
 	});
 	alert('Copied image.');
 });
-menu.addCheckboxOption('Screenshot: coordinates', ()=>ss_coords=true, ()=>ss_coords=false, false);
-menu.addCheckboxOption('Screenshot: world name', ()=>ss_world=true, ()=>ss_world=false, false);
-menu.addCheckboxOption('Screenshot: tile size', ()=>ss_tile=true, ()=>ss_tile=false, true);
+menu.addCheckboxOption('Screenshot: coordinates', ()=>ss_coords=true, ()=>ss_coords=false, ss_coords);
+menu.addCheckboxOption('Screenshot: world name', ()=>ss_world=true, ()=>ss_world=false, ss_world);
+menu.addCheckboxOption('Screenshot: tile size', ()=>ss_tile=true, ()=>ss_tile=false, ss_tile);
+menu.addCheckboxOption('Screenshot: date', ()=>ss_date=true, ()=>ss_date=false, ss_date);
