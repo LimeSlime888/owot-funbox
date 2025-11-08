@@ -2,6 +2,12 @@
 Scripts anyone is free to use (non-maliciously) for fun! :D  
 **\*Run owotutilities.js before running this**
 **°Run utilities.js before running this**
+## screenshot.js
+This script is for screenshotting canvas content.
+Use the menu to take a screenshot and put it into your clipboard.
+The *world name* option adds the world name at the top left.
+The *coordinates* option adds the coordinates at the top left.
+The *tile size* option adds the tile size at the bottom left.
 ## fastStickman.js*
 This script is for quick stickman placement. If the desired pose is not in a preset, you can modify a preset to match it!  
 **Current characters:** default, hazmat, squarie (`shock` = hazmat)  
