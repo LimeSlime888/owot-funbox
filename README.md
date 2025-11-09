@@ -5,10 +5,7 @@ Scripts anyone is free to use (non-maliciously) for fun! :D
 ## screenshot.js
 This script is for screenshotting canvas content.
 Use the menu or the keybind (CTRL+1) to take a screenshot and put it into your clipboard.
-The *date* option adds the date at the top left.
-The *world name* option adds the world name at the top left.
-The *coordinates* option adds the coordinates at the top left.
-The *tile size* option adds the tile size at the bottom left.
+Overlays are added to your screenshot. To toggle them, use the modal accessible through the *Screenshot settings* menu option.
 ## fastStickman.js*
 This script is for quick stickman placement. If the desired pose is not in a preset, you can modify a preset to match it!  
 **Current characters:** default, hazmat, squarie (`shock` = hazmat)  
