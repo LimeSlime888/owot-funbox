@@ -4,13 +4,15 @@
 	for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
 */
 
-var ss__date = true;
-var ss__world = true;
-var ss__coords = false;
-var ss__size = false;
-var ss__zoom = false;
-var ss__tile = false;
-var ss__user = true;
+var ss_overlays = {
+	date: true,
+	world: true,
+	coords: false,
+	size: false,
+	zoom: false,
+	tile: false,
+	user: true,
+};
 
 var ss_padding = 16;
 var ss_fontSize = 32;
@@ -21,9 +23,9 @@ function ss_copyScreenshot() {
 	w.redraw();
 	var [textTL, textTR, textBL, textBR] = [[],[],[],[]];
 
-	if (ss__date) textTL.push(new Date().toISOString());
-	if (ss__world) textTL.push(state.worldModel.pathname ? state.worldModel.pathname : '/');
-	if (ss__coords) {
+	if (ss_overlays.date) textTL.push(new Date().toISOString());
+	if (ss_overlays.world) textTL.push(state.worldModel.pathname ? state.worldModel.pathname : '/');
+	if (ss_overlays.coords) {
 		var tileCoordX = -positionX / tileW;
 		var tileCoordY = -positionY / tileH;
 		var centerY = -Math.floor(tileCoordY) / coordSizeY;
@@ -31,10 +33,10 @@ function ss_copyScreenshot() {
 		[centerY, centerX] = [centerY, centerX].map(e=>Math.floor(e*100)/100);
 		textTL.push(`${centerX}, ${centerY}`);
 	}
-	if (ss__tile) textBL.push(`tile = ${tileW.toFixed(2)}, ${tileH.toFixed(2)}`);
-	if (ss__zoom) textBL.push(zoom.toFixed(3)+'x');
-	if (ss__size) textBL.push(owotWidth+'x'+owotHeight);
-	if (ss__user) textTR.push(state.userModel.username || '(unregistered)');
+	if (ss_overlays.tile) textBL.push(`tile = ${tileW.toFixed(2)}, ${tileH.toFixed(2)}`);
+	if (ss_overlays.zoom) textBL.push(zoom.toFixed(3)+'x');
+	if (ss_overlays.size) textBL.push(owotWidth+'x'+owotHeight);
+	if (ss_overlays.user) textTR.push(state.userModel.username || '(unregistered)');
 
 	if (textTL.length || textTR.length || textBL.length || textBR.length) {
 		var font = owotCtx.font;
@@ -93,32 +95,48 @@ document.addEventListener('keydown', ss_onKeyDown);
 function ss_makeModal() {
 	var modal = new Modal();
 	modal.createForm();
-	modal.setFormTitle('Screenshot settings\n');
+	modal.setFormTitle('Screenshot settings');
 	modal.inputField.style.gridTemplateColumns = '280px 20px';
+	modal.inputField.style.marginBottom = '';
+	modal.inputField.style.margin = '10px 0';
 	let c_labels = {
 		invert: 'Invert-color text',
-		_date: '↖ Timestamp',
-		_world: '↖ World name',
-		_coords: '↖ Coordinates',
-		_size: '↙ Image size',
-		_zoom: '↙ Zoom',
-		_tile: '↙ Tile size',
-		_user: '↗ Username'
+		date: '↖ Timestamp',
+		world: '↖ World name',
+		coords: '↖ Coordinates',
+		size: '↙ Image size',
+		zoom: '↙ Zoom',
+		tile: '↙ Tile size',
+		user: '↗ Username'
 	};
-	var [c_invert, c_date, c_world, c_coords, c_size, c_zoom, c_tile, c_user] =
-	['invert', '_date', '_world', '_coords', '_size', '_zoom', '_tile', '_user'].map(function(e){
+	var [c_date, c_world, c_coords, c_size, c_zoom, c_tile, c_user, c_invert] =
+	['date', 'world', 'coords', 'size', 'zoom', 'tile', 'user', '.invert'].map(function(e){
 		let thing = document.createElement('input');
 		thing.type = 'checkbox';
-		thing.checked = window['ss_'+e] ?? false;
-		thing.id = 'ss_c_'+e;
-		thing.addEventListener('change', function(){
-			window['ss_'+e] = this.checked;
-		})
 		thing.label = document.createElement('label');
-		thing.label.innerText = c_labels[e];
-		thing.label.id = 'ss_cl_'+e;
+		if (e.startsWith('.')) {
+			e = e.substr(1);
+			thing.id = 'ss_c__'+e;
+			thing.label.innerText = c_labels[e];
+			thing.label.id = 'ss_cl__'+e;
+		} else {
+			thing.checked = ss_overlays[e] ?? false;
+			thing.id = 'ss_c_'+e;
+			thing.addEventListener('change', function(){
+				ss_overlays[e] = this.checked;
+			})
+			thing.label.innerText = c_labels[e];
+			thing.label.id = 'ss_cl_'+e;
+		}
 		modal.inputField.append(thing.label, thing);
+		return thing;
 	});
+
+	c_invert.checked = ss_invert;
+	c_invert.addEventListener('change', function(){
+		ss_invert = this.checked;
+	});
+
 	return w.ui.screenshotModal = modal;
 }
 ss_makeModal();
