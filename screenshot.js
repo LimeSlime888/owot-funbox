@@ -79,8 +79,8 @@ function ss_copyScreenshot() {
 		navigator.clipboard.write([new ClipboardItem({
 			'image/png': blob
 		})]);
+		alert('Copied image.');
 	});
-	alert('Copied image.');
 }
 
 document.removeEventListener('keydown', window.ss_onKeyDown);
