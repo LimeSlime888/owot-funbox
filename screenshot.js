@@ -1,6 +1,6 @@
 /*
 	by lime.owot
-	version 5
+	version 6
 	for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
 */
 
@@ -9,15 +9,15 @@ var ss_overlays = {
 	world: true,
 	coords: false,
 	size: false,
-	zoom: false,
-	tile: false,
+	zoom: true,
+	tile: true,
 	user: true,
 };
 
 var ss_padding = 16;
 var ss_fontSize = 32;
 var ss_invert = false;
-keyConfig.screenshot = 'CTRL+1';
+keyConfig.screenshot = 'ALT+1';
 
 function ss_copyScreenshot() {
 	w.redraw();
@@ -109,8 +109,8 @@ function ss_makeModal() {
 		tile: '↙ Tile size',
 		user: '↗ Username'
 	};
-	var [c_date, c_world, c_coords, c_size, c_zoom, c_tile, c_user, c_invert] =
-	['date', 'world', 'coords', 'size', 'zoom', 'tile', 'user', '.invert'].map(function(e){
+	var c_ = ['date', 'world', 'coords', 'size', 'zoom', 'tile', 'user', '.invert'];
+	for (let e of c_) {
 		let thing = document.createElement('input');
 		thing.type = 'checkbox';
 		thing.label = document.createElement('label');
@@ -130,7 +130,8 @@ function ss_makeModal() {
 		}
 		modal.inputField.append(thing.label, thing);
 		return thing;
-	});
+	}
+	var [c_date, c_world, c_coords, c_size, c_zoom, c_tile, c_user, c_invert] = c_;
 
 	c_invert.checked = ss_invert;
 	c_invert.addEventListener('change', function(){
