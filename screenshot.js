@@ -110,7 +110,8 @@ function ss_makeModal() {
 		user: '↗ Username'
 	};
 	var c_ = ['date', 'world', 'coords', 'size', 'zoom', 'tile', 'user', '.invert'];
-	for (let e of c_) {
+	for (let i of Object.keys(c_)) {
+		let e = c_[i];
 		let thing = document.createElement('input');
 		thing.type = 'checkbox';
 		thing.label = document.createElement('label');
@@ -129,7 +130,7 @@ function ss_makeModal() {
 			thing.label.id = 'ss_cl_'+e;
 		}
 		modal.inputField.append(thing.label, thing);
-		return thing;
+		c_[i] = thing;
 	}
 	var [c_date, c_world, c_coords, c_size, c_zoom, c_tile, c_user, c_invert] = c_;
 
