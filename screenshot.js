@@ -1,6 +1,6 @@
 /*
 	by lime.owot
-	version 6
+	version 7
 	for latest version, see github:LimeSlime888/owot-funbox/screenshot.js
 */
 
@@ -17,13 +17,15 @@ var ss_overlays = {
 var ss_padding = 16;
 var ss_fontSize = 32;
 var ss_invert = false;
+var ss_download = false;
 keyConfig.screenshot = 'ALT+1';
 
 function ss_copyScreenshot() {
 	w.redraw();
 	var [textTL, textTR, textBL, textBR] = [[],[],[],[]];
+	let timestampString = new Date().toISOString();
 
-	if (ss_overlays.date) textTL.push(new Date().toISOString());
+	if (ss_overlays.date) textTL.push(timestampString);
 	if (ss_overlays.world) textTL.push(state.worldModel.pathname ? state.worldModel.pathname : '/');
 	if (ss_overlays.coords) {
 		var tileCoordX = -positionX / tileW;
@@ -78,6 +80,18 @@ function ss_copyScreenshot() {
 	}
 
 	owot.toBlob(function(blob){
+		if (ss_download) {
+			let link = document.createElement('a');
+			let url = URL.createObjectURL(blob);
+			link.href = url;
+			link.download = timestampString.replaceAll(':',';')+'.png';
+			link.style.display = 'none';
+			document.body.append(link);
+			link.click();
+			URL.revokeObjectURL(url);
+			link.remove();
+			return;
+		}
 		navigator.clipboard.write([new ClipboardItem({
 			'image/png': blob
 		})]);
@@ -101,6 +115,7 @@ function ss_makeModal() {
 	modal.inputField.style.margin = '10px 0';
 	let c_labels = {
 		invert: 'Invert-color text',
+		download: 'Download on screenshot',
 		date: '↖ Timestamp',
 		world: '↖ World name',
 		coords: '↖ Coordinates',
@@ -109,7 +124,7 @@ function ss_makeModal() {
 		tile: '↙ Tile size',
 		user: '↗ Username'
 	};
-	var c_ = ['date', 'world', 'coords', 'size', 'zoom', 'tile', 'user', '.invert'];
+	var c_ = ['date', 'world', 'coords', 'size', 'zoom', 'tile', 'user', '.invert', '.download'];
 	for (let i of Object.keys(c_)) {
 		let e = c_[i];
 		let thing = document.createElement('input');
@@ -132,11 +147,16 @@ function ss_makeModal() {
 		modal.inputField.append(thing.label, thing);
 		c_[i] = thing;
 	}
-	var [c_date, c_world, c_coords, c_size, c_zoom, c_tile, c_user, c_invert] = c_;
+	var [c_date, c_world, c_coords, c_size, c_zoom, c_tile, c_user, c_invert, c_download] = c_;
 
 	c_invert.checked = ss_invert;
 	c_invert.addEventListener('change', function(){
 		ss_invert = this.checked;
+	});
+
+	c_download.checked = ss_download;
+	c_download.addEventListener('change', function(){
+		ss_download = this.checked;
 	});
 
 	return w.ui.screenshotModal = modal;
